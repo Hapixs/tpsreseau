@@ -124,7 +124,7 @@ En tant qu'utilisateur KDE, pas possible d'avoir les infos avec le GUI.
 >  - deux personnes habitent au même numéro dans la même rue, mais dans deux maisons différentes
 >  - quand une de ces personnes envoie un message, aucun problème, l'adresse du destinataire est unique, la lettre sera reçue
 >  - par contre, pour envoyer un message à l'une de ces deux personnes, le facteur sera dans l'impossibilité de savoir dans quelle boîte aux lettres il doit poser le message
->  - ça marche à l'aller, mais pas au retour
+>  - ça marche à l'aller, mais pas au retour 
 
 # II. Exploration locale en duo
 
@@ -362,11 +362,22 @@ Une fois que le serveur DHCP vous a donné une IP, vous enregistrer un fichier a
 
 🌞**Exploration du DHCP, depuis votre PC**
 
-- afficher l'adresse IP du serveur DHCP du réseau WiFi YNOV
-- cette adresse a une durée de vie limitée. C'est le principe du ***bail DHCP*** (ou *DHCP lease*). Trouver la date d'expiration de votre bail DHCP
-- vous pouvez vous renseigner un peu sur le fonctionnement de DHCP dans les grandes lignes. On aura un cours là dessus :)
-
-> Chez vous, c'est votre box qui fait serveur DHCP et qui vous donne une IP quand vous le demandez.
+```
+[alexandre@alexandre-bouritos ~]$ cat /var/lib/dhclient/dhclient.leases 
+lease {
+  interface "wlan0";
+  fixed-address 10.33.16.120;
+  option subnet-mask 255.255.252.0;
+  option dhcp-lease-time 86400;
+  option routers 10.33.19.254;
+  option dhcp-message-type 5;
+  option dhcp-server-identifier 10.33.19.254;
+  option domain-name-servers 8.8.8.8,8.8.4.4,1.1.1.1;
+  renew 3 2022/10/05 18:46:16;
+  rebind 4 2022/10/06 04:34:14;
+  expire 4 2022/10/06 07:34:14;
+}
+```
 
 ## 2. DNS
 
@@ -376,20 +387,65 @@ Un **serveur DNS** est un serveur à qui l'on peut poser des questions (= effect
 
 Si votre navigateur fonctionne "normalement" (il vous permet d'aller sur `google.com` par exemple) alors votre ordinateur connaît forcément l'adresse d'un serveur DNS. Et quand vous naviguez sur internet, il effectue toutes les requêtes DNS à votre place, de façon automatique.
 
-🌞** Trouver l'adresse IP du serveur DNS que connaît votre ordinateur**
+```
+[alexandre@alexandre-bouritos ~]$ cat /etc/resolv.conf 
+nameserver 8.8.8.8
+nameserver 8.8.4.4
+nameserver 1.1.1.1
+```
 
-🌞 Utiliser, en ligne de commande l'outil `nslookup` (Windows, MacOS) ou `dig` (GNU/Linux, MacOS) pour faire des requêtes DNS à la main
+```
+[alexandre@alexandre-bouritos ~]$ dig google.com
+;; QUESTION SECTION:
+;google.com.                    IN      A
 
-- faites un *lookup* (*lookup* = "dis moi à quelle IP se trouve tel nom de domaine")
-  - pour `google.com`
-  - pour `ynov.com`
-  - interpréter les résultats de ces commandes
-- déterminer l'adresse IP du serveur à qui vous venez d'effectuer ces requêtes
-- faites un *reverse lookup* (= "dis moi si tu connais un nom de domaine pour telle IP")
-  - pour l'adresse `78.73.21.21`
-  - pour l'adresse `22.146.54.58`
-  - interpréter les résultats
-  - *si vous vous demandez, j'ai pris des adresses random :)*
+;; ANSWER SECTION:
+google.com.             242     IN      A       216.58.215.46
+
+;; Query time: 26 msec
+;; SERVER: 8.8.8.8#53(8.8.8.8) (UDP)
+```
+
+```
+[alexandre@alexandre-bouritos ~]$ dig ynov.com
+
+;; QUESTION SECTION:
+;ynov.com.                      IN      A
+
+;; ANSWER SECTION:
+ynov.com.               300     IN      A       172.67.74.226
+ynov.com.               300     IN      A       104.26.11.233
+ynov.com.               300     IN      A       104.26.10.233
+
+;; Query time: 36 msec
+;; SERVER: 8.8.8.8#53(8.8.8.8) (UDP)
+```
+
+```
+[alexandre@alexandre-bouritos ~]$ dig -x 78.73.21.21
+
+;; QUESTION SECTION:
+;21.21.73.78.in-addr.arpa.      IN      PTR
+
+;; ANSWER SECTION:
+21.21.73.78.in-addr.arpa. 3600  IN      PTR     78-73-21-21-no168.tbcn.telia.com.
+
+;; Query time: 36 msec
+;; SERVER: 8.8.8.8#53(8.8.8.8) (UDP)
+```
+
+```
+[alexandre@alexandre-bouritos ~]$ dig -x 22.146.54.58
+
+;; QUESTION SECTION:
+;58.54.146.22.in-addr.arpa.     IN      PTR
+
+;; AUTHORITY SECTION:
+in-addr.arpa.           2624    IN      SOA     b.in-addr-servers.arpa. nstld.iana.org. 2022090341 1800 900 604800 3600
+
+;; Query time: 29 msec
+;; SERVER: 8.8.8.8#53(8.8.8.8) (UDP)
+```
 
 # IV. Wireshark
 
