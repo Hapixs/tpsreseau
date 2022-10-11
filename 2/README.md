@@ -65,6 +65,8 @@ Le lab, il vous faut deux machines :
 
 > Rappel : tout doit être fait *via* la ligne de commandes. Faites-vous du bien, et utilisez Powershell plutôt que l'antique cmd sous Windows svp.
 
+Hote
+
 ```
 [alexandre@alexandre-bouritos ~]$ ip a | grep vbox
 4: vboxnet0: <BROADCAST,MULTICAST,UP,LOWER_UP> mtu 1500 qdisc fq_codel state UP group default qlen 1000
@@ -81,6 +83,7 @@ Broadcast: 192.168.59.255       11000000.10101000.001110 11.11111111
 Hosts/Net: 1022                  Class C, Private Internet
 
 ```
+VM
 ```
 user@debian:~$ cat /etc/network/interfaces
 auto enp0s8
@@ -91,6 +94,17 @@ iface enp0s8 inet static
 user@debian:~$ ip a | grep enp0s8
 3: enp0s8: <BROADCAST,MULTICAST,UP,LOWER_UP> mtu 1500 qdisc pfifo_fast state UP group default qlen 1000
     inet 192.168.56.200/22 brd 192.168.59.255 scope global enp0s8
+user@debian:~$ ipcalc 192.168.56.200/22
+Address:   192.168.56.200       11000000.10101000.001110 00.11001000
+Netmask:   255.255.252.0 = 22   11111111.11111111.111111 00.00000000
+Wildcard:  0.0.3.255            00000000.00000000.000000 11.11111111
+=>
+Network:   192.168.56.0/22      11000000.10101000.001110 00.00000000
+HostMin:   192.168.56.1         11000000.10101000.001110 00.00000001
+HostMax:   192.168.59.254       11000000.10101000.001110 11.11111110
+Broadcast: 192.168.59.255       11000000.10101000.001110 11.11111111
+Hosts/Net: 1022                  Class C, Private Internet
+
 ```
 
 🌞 **Prouvez que la connexion est fonctionnelle entre les deux machines**
