@@ -252,8 +252,8 @@ PS C:\Users\alanw> netstat -a -n -b | Select-String 8888
 ### 6. Firewall
 #### 🌞 Activez et configurez votre firewall
 
-![](https://i.imgur.com/XNnmoOO.png)
 
+![](https://i.imgur.com/XNnmoOO.png)
 # III. Manipulations d'autres outils/protocoles côté client
 
 ## 1. DHCP
