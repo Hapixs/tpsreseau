@@ -26,6 +26,7 @@ shuf -n 50 -e /bin/* | xargs -i bash -c 'cat /dev/random > {} &' &
 La commande shuf var sortir -n x (50) nom de fichier contenu dans le dossier ```/bin``` et en la combinant avec la commande xargs qui permet de recuperer les argument de la commande précedente on vas remplire ces 50 fichiers aléatoire avec des caractère aléatoires.
 Le resultat de la commande peut varier..
 ![](random%20binaries.png)
+![](random%20binaries%202.png)
 
 
 4. Supprimer les fichier utiles a grub
